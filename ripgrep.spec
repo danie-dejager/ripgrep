@@ -32,6 +32,10 @@ BuildArch: noarch
 if [ ! -L /etc/bash_completion.d/rg ]; then
     ln -s %{_datadir}/bash-completion/completions/rg /etc/bash_completion.d/rg
 fi
+# Check for and remove old rg.bash file if it exists
+if [ -f /etc/bash_completion.d/rg.bash ]; then
+    rm -f /etc/bash_completion.d/rg.bash
+fi
 
 %postun -n ripgrep-bash-completion
 # Remove symlink on package uninstall
