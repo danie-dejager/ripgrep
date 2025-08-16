@@ -67,7 +67,7 @@ export PATH="$PATH:$HOME/.cargo/bin"
 $HOME/.cargo/bin/cargo build --release --features 'pcre2'
 target/release/%{bin_name} --generate man > %{bin_name}.1
 target/release/%{bin_name} --generate complete-bash > bash_complete_%{bin_name} || exit 1
-target/release/%{bin_name}--generate complete-zsh > zsh_complete_%{bin_name}|| exit 1
+target/release/%{bin_name} --generate complete-zsh > zsh_complete_%{bin_name}|| exit 1
 target/release/%{bin_name} --generate complete-fish > fish_complete_%{bin_name} || exit 1
 gzip %{bin_name}.1
 
