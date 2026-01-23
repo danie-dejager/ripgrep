@@ -86,7 +86,8 @@ install -m 644 fish_complete_%{bin_name} %{buildroot}/usr/share/fish/vendor_comp
 $HOME/.cargo/bin/cargo test --release --locked --all
 
 %files
-%license LICENSE
+%license LICENSE-MIT UNLICENSE COPYING
+%doc README.md CHANGELOG.md
 %{_bindir}/%{bin_name}
 %{_mandir}/man1/%{bin_name}.1.gz
 
