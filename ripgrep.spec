@@ -1,6 +1,6 @@
 Name:           ripgrep
 Version:        15.1.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        ripgrep recursively searches directories for a regex pattern while respecting your gitignore
 URL:            https://github.com/BurntSushi/ripgrep
 License:        MIT & Unlicense
@@ -101,6 +101,7 @@ $HOME/.cargo/bin/cargo test --release --locked --all
 %{_datadir}/zsh/site-functions/_%{bin_name}
 
 %changelog
+* Sun May 10 2026 - Danie de JAger - 15.1.0-3
 * Fri Jan 23 2026 - Danie de Jager - 15.1.0-2
 * Wed Oct 22 2025 - Danie de Jager - 15.1.0-1
 * Mon Oct 20 2025 - Danie de Jager - 15.0.0-1
