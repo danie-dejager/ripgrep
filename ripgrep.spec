@@ -11,6 +11,12 @@ BuildRequires:  python3
 BuildRequires:  curl
 BuildRequires:  gcc
 
+# Amazon Linux 2023 rust-lld workaround
+%if 0%{?amzn} == 2023
+%undefine _package_note_flags
+%global al2023_rustflags -C link-arg=-fuse-ld=bfd
+%endif
+
 %define debug_package %{nil}
 %global bin_name rg
 
@@ -62,13 +68,32 @@ BuildArch: noarch
 %setup -q
 
 %build
+%build
+
+%if 0%{?amzn} == 2023
+mkdir -p .cargo
+
+cat > .cargo/config.toml << 'EOF'
+[target.x86_64-unknown-linux-gnu]
+linker = "gcc"
+
+[target.aarch64-unknown-linux-gnu]
+linker = "gcc"
+EOF
+
+export RUSTFLAGS="%{al2023_rustflags}"
+%endif
+
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 export PATH="$PATH:$HOME/.cargo/bin"
-$HOME/.cargo/bin/cargo build --release --features 'pcre2'
+
+cargo build --release --features 'pcre2'
+
 target/release/%{bin_name} --generate man > %{bin_name}.1
-target/release/%{bin_name} --generate complete-bash > bash_complete_%{bin_name} || exit 1
-target/release/%{bin_name} --generate complete-zsh > zsh_complete_%{bin_name}|| exit 1
-target/release/%{bin_name} --generate complete-fish > fish_complete_%{bin_name} || exit 1
+target/release/%{bin_name} --generate complete-bash > bash_complete_%{bin_name}
+target/release/%{bin_name} --generate complete-zsh > zsh_complete_%{bin_name}
+target/release/%{bin_name} --generate complete-fish > fish_complete_%{bin_name}
+
 gzip %{bin_name}.1
 
 %install
@@ -83,7 +108,11 @@ install -m 644 zsh_complete_%{bin_name} %{buildroot}/usr/share/zsh/site-function
 install -m 644 fish_complete_%{bin_name} %{buildroot}/usr/share/fish/vendor_completions.d/%{bin_name}.fish
 
 %check
-$HOME/.cargo/bin/cargo test --release --locked --all
+%if 0%{?amzn} == 2023
+export RUSTFLAGS="%{al2023_rustflags}"
+%endif
+
+cargo test --release --locked --all
 
 %files
 %license LICENSE-MIT UNLICENSE COPYING
