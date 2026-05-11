@@ -142,6 +142,7 @@ install -m 0644 \
     %{buildroot}%{_datadir}/fish/vendor_completions.d/%{bin_name}.fish
 
 %check
+export PATH="$PATH:$HOME/.cargo/bin"
 
 %if 0%{?amzn} == 2023
 export RUSTFLAGS="%{al2023_rustflags}"
